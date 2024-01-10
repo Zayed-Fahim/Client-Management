@@ -19,15 +19,15 @@
 }
 
 ::-webkit-scrollbar:horizontal {
-  height: 8px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
   background-color: #006fba;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-track:horizontal {
   background-color: #dfdfdf;
-  border-radius: 8px;
+  border-radius: 10px;
 }
