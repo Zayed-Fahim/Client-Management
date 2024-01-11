@@ -6,15 +6,15 @@ import UnderReviewTask from "./UnderReviewTask";
 import CompletedTask from "./CompletedTask";
 import OverDateTask from "./OverDateTask";
 
-const Task = () => {
+const Task = ({ setIsModalOpen }) => {
   return (
     <div className="flex gap-5 h-full overflow-x-auto">
-      <InCompleteTask />
-      <ToDoTask />
-      <DoingTask />
-      <UnderReviewTask />
-      <CompletedTask />
-      <OverDateTask />
+      <InCompleteTask setIsModalOpen={setIsModalOpen} />
+      <ToDoTask setIsModalOpen={setIsModalOpen} />
+      <DoingTask setIsModalOpen={setIsModalOpen} />
+      <UnderReviewTask setIsModalOpen={setIsModalOpen} />
+      <CompletedTask setIsModalOpen={setIsModalOpen} />
+      <OverDateTask setIsModalOpen={setIsModalOpen} />
     </div>
   );
 };
