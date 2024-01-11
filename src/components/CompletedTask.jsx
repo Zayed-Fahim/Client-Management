@@ -2,7 +2,7 @@ import React from "react";
 import incompleteData from "../data/incompleteData";
 import Card from "../smallComponents/card";
 
-const CompletedTask = () => {
+const CompletedTask = ({ setIsModalOpen }) => {
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">
       <div className="flex justify-between w-full items-center px-2">
@@ -11,7 +11,7 @@ const CompletedTask = () => {
       </div>
       <div className="flex flex-col gap-5 overflow-y-auto px-2 py-1.5">
         {incompleteData.map((data, index) => (
-          <Card key={index} data={data} />
+          <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
         ))}
       </div>
     </div>

@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import { FaLayerGroup } from "react-icons/fa6";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { RiWechatLine } from "react-icons/ri";
 import { GrAttachment } from "react-icons/gr";
 import { IoCalendarOutline } from "react-icons/io5";
+import AttachmentsModal from "../utils/AttachmentsModal";
 
-const Card = ({ data }) => {
+const Card = ({ data, setIsModalOpen }) => {
+  const modalRef = useRef(null);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+    modalRef.current.showModal();
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    modalRef.current.close();
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full border p-2 bg-white rounded">
       <div className="flex w-full justify-between items-center">
@@ -64,7 +76,9 @@ const Card = ({ data }) => {
         </div>
 
         <div className="flex gap-1 items-center">
-          <GrAttachment />
+          <button onClick={() => openModal()}>
+            <GrAttachment />
+          </button>
           <p className="font-sm font-semibold">{data?.attachments}</p>
         </div>
         <div className="flex gap-1 items-center">
@@ -78,6 +92,7 @@ const Card = ({ data }) => {
           </p>
         </div>
       </div>
+      <AttachmentsModal ref={modalRef} closeModal={closeModal} />
     </div>
   );
 };
