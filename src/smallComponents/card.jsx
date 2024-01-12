@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { FaLayerGroup } from "react-icons/fa6";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { RiWechatLine } from "react-icons/ri";
@@ -6,9 +6,59 @@ import { GrAttachment } from "react-icons/gr";
 import { IoCalendarOutline } from "react-icons/io5";
 import AttachmentsModal from "../utils/AttachmentsModal";
 
-const Card = ({ data, setIsModalOpen, refetch }) => {
+const Card = ({ data, setIsModalOpen }) => {
   const modalRef = useRef(null);
-
+  const formRef = useRef(null);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedFiles, setSelectedFiles] = useState();
+  const [attachmentsCount, setAttachmentsCount] = useState(null);
+  const handleUpdateTask = async () => {
+    setIsLoading(true);
+    if (!selectedFiles || selectedFiles.length === 0) {
+      window.confirm("Please select a file");
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const filesData = Array.from(selectedFiles).map((file) => ({
+        name: file.name,
+        lastModified: file.lastModified,
+        lastModifiedDate: file.lastModifiedDate,
+        webkitRelativePath: file.webkitRelativePath,
+        size: file.size,
+        type: file.type,
+      }));
+      const response = await fetch(
+        `https://client-management-server.vercel.app/${data.slug}/${data.assigned_for}/${data.task_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ attachments: filesData }),
+        }
+      );
+      if (response.ok) {
+        const result = await response.json();
+        if (result) {
+          setAttachmentsCount(result?.payload);
+          setIsUpdated(true);
+          formRef.current.reset();
+        }
+      } else {
+        console.error("Failed to update task:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error.message);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsUpdated(false);
+        closeModal();
+      }, 2000);
+    }
+  };
   const openModal = () => {
     setIsModalOpen(true);
     modalRef.current.showModal();
@@ -17,7 +67,7 @@ const Card = ({ data, setIsModalOpen, refetch }) => {
     setIsModalOpen(false);
     modalRef.current.close();
   };
-  const attachments = localStorage.getItem("attachments");
+
   return (
     <div className="flex flex-col gap-4 w-full border p-2 bg-white rounded">
       <div className="flex w-full justify-between items-center">
@@ -80,7 +130,7 @@ const Card = ({ data, setIsModalOpen, refetch }) => {
             <GrAttachment />
           </button>
           <p className="font-sm font-semibold">
-            {data?.attachments ? attachments : 0}
+            {data?.attachments ? attachmentsCount : 0}
           </p>
         </div>
         <div className="flex gap-1 items-center">
@@ -94,7 +144,17 @@ const Card = ({ data, setIsModalOpen, refetch }) => {
           </p>
         </div>
       </div>
-      <AttachmentsModal data={data} ref={modalRef} closeModal={closeModal} />
+      <AttachmentsModal
+        data={data}
+        ref={modalRef}
+        formRef={formRef}
+        isLoading={isLoading}
+        isUpdated={isUpdated}
+        closeModal={closeModal}
+        selectedFiles={selectedFiles}
+        handleUpdateTask={handleUpdateTask}
+        setSelectedFiles={setSelectedFiles}
+      />
     </div>
   );
 };
