@@ -32,7 +32,7 @@ const AttachmentsModal = ({ closeModal, data }, ref) => {
         type: file.type,
       }));
       const response = await fetch(
-        `http://client-management-server.vercel.app/${data.slug}/${data.assigned_for}/${data.task_id}`,
+        `https://client-management-server.vercel.app/${data.slug}/${data.assigned_for}/${data.task_id}`,
         {
           method: "PATCH",
           headers: {
