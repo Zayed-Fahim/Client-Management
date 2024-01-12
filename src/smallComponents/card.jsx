@@ -65,7 +65,7 @@ const Card = ({ data, setIsModalOpen }) => {
         </div>
         <div className="h-8 w-8 bg-[#F2F4F7] rounded-[50%] flex justify-center items-center ">
           <p className="font-semibold text-sm">
-            {data?.notifications}
+            {data?.notifications >= 12 ? 12 : data?.notifications}
             {data?.notifications > 12 && "+"}
           </p>
         </div>
@@ -79,7 +79,9 @@ const Card = ({ data, setIsModalOpen }) => {
           <button onClick={() => openModal()}>
             <GrAttachment />
           </button>
-          <p className="font-sm font-semibold">{data?.attachments}</p>
+          <p className="font-sm font-semibold">
+            {data?.attachments ? data?.attachments?.length : 0}
+          </p>
         </div>
         <div className="flex gap-1 items-center">
           <IoCalendarOutline />
@@ -92,7 +94,7 @@ const Card = ({ data, setIsModalOpen }) => {
           </p>
         </div>
       </div>
-      <AttachmentsModal ref={modalRef} closeModal={closeModal} />
+      <AttachmentsModal data={data} ref={modalRef} closeModal={closeModal} />
     </div>
   );
 };
