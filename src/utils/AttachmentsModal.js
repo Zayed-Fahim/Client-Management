@@ -1,27 +1,63 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import "../css/button.css";
 import "../css/updateDataLoader.css";
 
-const AttachmentsModal = (
-  {
-    closeModal,
-    setSelectedFiles,
-    isLoading,
-    isUpdated,
-    formRef,
-    selectedFiles,
-    handleUpdateTask,
-  },
-  ref
-) => {
+const AttachmentsModal = ({ closeModal, data }, ref) => {
   const { register, handleSubmit } = useForm();
-
+  const formRef = useRef(null);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedFiles, setSelectedFiles] = useState();
   const onSubmit = (data) => {};
   const handleFilesChange = (event) => {
     setSelectedFiles(event?.target?.files);
   };
-
+  const handleUpdateTask = async () => {
+    setIsLoading(true);
+    if (!selectedFiles || selectedFiles.length === 0) {
+      window.confirm("Please select a file");
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const filesData = Array.from(selectedFiles).map((file) => ({
+        name: file.name,
+        lastModified: file.lastModified,
+        lastModifiedDate: file.lastModifiedDate,
+        webkitRelativePath: file.webkitRelativePath,
+        size: file.size,
+        type: file.type,
+      }));
+      const response = await fetch(
+        `https://client-management-server.vercel.app/${data.slug}/${data.assigned_for}/${data.task_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ attachments: filesData }),
+        }
+      );
+      if (response.ok) {
+        const result = await response.json();
+        if (result) {
+          setIsUpdated(true);
+          formRef.current.reset();
+        }
+      } else {
+        console.error("Failed to update task:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error.message);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsUpdated(false);
+        closeModal();
+      }, 2000);
+    }
+  };
   return (
     <dialog
       ref={ref}
