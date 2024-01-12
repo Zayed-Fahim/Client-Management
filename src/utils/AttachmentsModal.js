@@ -44,8 +44,10 @@ const AttachmentsModal = ({ closeModal, data, refetch }, ref) => {
       if (response.ok) {
         const result = await response.json();
         if (result) {
+          refetch();
           setIsUpdated(true);
           formRef.current.reset();
+          window.location.reload();
         }
       } else {
         console.error("Failed to update task:", response.statusText);
@@ -57,7 +59,6 @@ const AttachmentsModal = ({ closeModal, data, refetch }, ref) => {
         setIsLoading(false);
         setIsUpdated(false);
         closeModal();
-        refetch();
       }, 2000);
     }
   };
