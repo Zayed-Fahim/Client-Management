@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import "../css/updateDataLoader.css";
 import "../css/button.css";
 
-const AttachmentsModal = ({ closeModal, data, refetch }, ref) => {
+const AttachmentsModal = ({ closeModal, data }, ref) => {
   const { register, handleSubmit } = useForm();
   const formRef = useRef(null);
 
@@ -44,10 +44,9 @@ const AttachmentsModal = ({ closeModal, data, refetch }, ref) => {
       if (response.ok) {
         const result = await response.json();
         if (result) {
-          refetch();
+          console.log(result?.payload);
           setIsUpdated(true);
           formRef.current.reset();
-          window.location.reload();
         }
       } else {
         console.error("Failed to update task:", response.statusText);
