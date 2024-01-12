@@ -42,7 +42,7 @@ const ToDoTask = ({ setIsModalOpen }) => {
           <Loader />
         ) : (
           toDoData?.payload?.map((data, index) => (
-            <Card key={index} fetchData={fetchData} data={data} setIsModalOpen={setIsModalOpen} />
+            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>
