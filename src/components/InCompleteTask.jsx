@@ -1,34 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
 import Card from "../smallComponents/card";
 import Loader from "../utils/Loader";
 
 const InCompleteTask = ({ setIsModalOpen }) => {
-  const [incompleteData, setIncompleteData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          "https://client-management-server.vercel.app/incomplete-tasks"
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const incompleteTask = await response.json();
-        setIncompleteData(incompleteTask);
-      } catch (error) {
-        console.error("Error fetching incomplete tasks:", error.message);
-      } finally {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      }
-    };
-    fetchData();
-    const intervalId = setInterval(fetchData, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+  const {
+    isLoading,
+    refetch,
+    data: queryData,
+  } = useQuery({
+    queryKey: ["incompleteData"],
+    queryFn: () =>
+      fetch(
+        "https://client-management-server.vercel.app/incomplete-tasks"
+      ).then((res) => res.json()),
+  });
+
+  const incompleteData = queryData?.payload || [];
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">
       <div className="flex justify-between w-full px-2">
@@ -42,8 +30,13 @@ const InCompleteTask = ({ setIsModalOpen }) => {
         {isLoading ? (
           <Loader />
         ) : (
-          incompleteData?.payload?.map((data, index) => (
-            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
+          incompleteData?.map((data, index) => (
+            <Card
+              key={index}
+              data={data}
+              refetch={refetch}
+              setIsModalOpen={setIsModalOpen}
+            />
           ))
         )}
       </div>
