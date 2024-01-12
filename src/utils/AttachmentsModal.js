@@ -44,7 +44,7 @@ const AttachmentsModal = ({ closeModal, data }, ref) => {
       if (response.ok) {
         const result = await response.json();
         if (result) {
-          console.log(result?.payload);
+          localStorage.setItem("attachments", result?.payload);
           setIsUpdated(true);
           formRef.current.reset();
         }
