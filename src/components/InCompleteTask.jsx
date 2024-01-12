@@ -5,28 +5,29 @@ import Loader from "../utils/Loader";
 const InCompleteTask = ({ setIsModalOpen }) => {
   const [incompleteData, setIncompleteData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        "https://client-management-server.vercel.app/incomplete-tasks"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const incompleteTask = await response.json();
-      setIncompleteData(incompleteTask);
-    } catch (error) {
-      console.error("Error fetching incomplete tasks:", error.message);
-    } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    }
-  };
   useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          "https://client-management-server.vercel.app/incomplete-tasks"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const incompleteTask = await response.json();
+        setIncompleteData(incompleteTask);
+      } catch (error) {
+        console.error("Error fetching incomplete tasks:", error.message);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+      }
+    };
     fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+    return () => clearInterval(intervalId);
   }, []);
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">

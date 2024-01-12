@@ -5,28 +5,30 @@ import Loader from "../utils/Loader";
 const DoingTask = ({ setIsModalOpen }) => {
   const [doingData, setDoingData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        "https://client-management-server.vercel.app/doing-tasks"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const doingTask = await response.json();
-      setDoingData(doingTask);
-    } catch (error) {
-      console.error("Error fetching doing tasks:", error.message);
-    } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
-  };
   useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          "https://client-management-server.vercel.app/doing-tasks"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const doingTask = await response.json();
+        setDoingData(doingTask);
+      } catch (error) {
+        console.error("Error fetching doing tasks:", error.message);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      }
+    };
+
     fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+    return () => clearInterval(intervalId);
   }, []);
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">
