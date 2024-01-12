@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import "../css/updateDataLoader.css";
 import "../css/button.css";
 
-const AttachmentsModal = ({ closeModal, data, fetchData }, ref) => {
+const AttachmentsModal = ({ closeModal, data }, ref) => {
   const { register, handleSubmit } = useForm();
   const formRef = useRef(null);
 
@@ -56,7 +56,7 @@ const AttachmentsModal = ({ closeModal, data, fetchData }, ref) => {
       setTimeout(() => {
         setIsLoading(false);
         setIsUpdated(false);
-        fetchData();
+        window.location.reload();
         closeModal();
       }, 2000);
     }
