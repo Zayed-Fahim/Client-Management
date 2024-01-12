@@ -20,7 +20,9 @@ const OverDateTask = ({ setIsModalOpen }) => {
     } catch (error) {
       console.error("Error fetching overDate tasks:", error.message);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3500);
     }
   };
   useEffect(() => {
@@ -37,7 +39,7 @@ const OverDateTask = ({ setIsModalOpen }) => {
           <Loader />
         ) : (
           overDateData?.payload?.map((data, index) => (
-            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
+            <Card key={index} fetchData={fetchData} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>

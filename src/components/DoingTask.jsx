@@ -20,7 +20,9 @@ const DoingTask = ({ setIsModalOpen }) => {
     } catch (error) {
       console.error("Error fetching doing tasks:", error.message);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
   useEffect(() => {
@@ -40,7 +42,7 @@ const DoingTask = ({ setIsModalOpen }) => {
           <Loader />
         ) : (
           doingData?.payload?.map((data, index) => (
-            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
+            <Card key={index} fetchData={fetchData} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>
