@@ -1,23 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../smallComponents/card";
 import Loader from "../utils/Loader";
-import { useQuery } from "@tanstack/react-query";
 
 const CompletedTask = ({ setIsModalOpen }) => {
-  const {
-    isLoading,
-    refetch,
-    data: queryData,
-  } = useQuery({
-    queryKey: ["completedData"],
-    queryFn: () =>
-      fetch("https://client-management-server.vercel.app/completed-tasks").then(
-        (res) => res.json()
-      ),
-  });
+  const [completedData, setCompletedData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const completedData = queryData?.payload || [];
-
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        "https://client-management-server.vercel.app/completed-tasks"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const completedTask = await response.json();
+      setCompletedData(completedTask);
+    } catch (error) {
+      console.error("Error fetching completed tasks:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">
       <div className="flex justify-between w-full items-center px-2">
@@ -28,13 +36,8 @@ const CompletedTask = ({ setIsModalOpen }) => {
         {isLoading ? (
           <Loader />
         ) : (
-          completedData.map((data, index) => (
-            <Card
-              key={index}
-              data={data}
-              refetch={refetch}
-              setIsModalOpen={setIsModalOpen}
-            />
+          completedData?.payload?.map((data, index) => (
+            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>

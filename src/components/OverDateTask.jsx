@@ -1,22 +1,31 @@
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../smallComponents/card";
 import Loader from "../utils/Loader";
 
 const OverDateTask = ({ setIsModalOpen }) => {
-  const {
-    isLoading,
-    refetch,
-    data: queryData,
-  } = useQuery({
-    queryKey: ["overDateData"],
-    queryFn: () =>
-      fetch("https://client-management-server.vercel.app/over-date-tasks").then(
-        (res) => res.json()
-      ),
-  });
+  const [overDateData, setOverDateData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const overDateData = queryData?.payload || [];
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        "https://client-management-server.vercel.app/over-date-tasks"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const overDateTask = await response.json();
+      setOverDateData(overDateTask);
+    } catch (error) {
+      console.error("Error fetching overDate tasks:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="bg-[#F2F4F7] min-w-[350px] py-5 flex flex-col gap-5">
       <div className="flex justify-between w-full items-center px-2">
@@ -27,13 +36,8 @@ const OverDateTask = ({ setIsModalOpen }) => {
         {isLoading ? (
           <Loader />
         ) : (
-          overDateData?.map((data, index) => (
-            <Card
-              key={index}
-              data={data}
-              refetch={refetch}
-              setIsModalOpen={setIsModalOpen}
-            />
+          overDateData?.payload?.map((data, index) => (
+            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>
