@@ -130,7 +130,7 @@ const Card = ({ data, setIsModalOpen }) => {
             <GrAttachment />
           </button>
           <p className="font-sm font-semibold">
-            {attachmentsCount ? attachmentsCount?.attachments?.length : 0}
+            {data?.attachments ? data.attachments.length : 0}
           </p>
         </div>
         <div className="flex gap-1 items-center">
