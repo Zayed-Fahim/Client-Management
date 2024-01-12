@@ -6,7 +6,7 @@ import { GrAttachment } from "react-icons/gr";
 import { IoCalendarOutline } from "react-icons/io5";
 import AttachmentsModal from "../utils/AttachmentsModal";
 
-const Card = ({ data, setIsModalOpen,refetch }) => {
+const Card = ({ data, setIsModalOpen, refetch }) => {
   const modalRef = useRef(null);
 
   const openModal = () => {
@@ -17,7 +17,7 @@ const Card = ({ data, setIsModalOpen,refetch }) => {
     setIsModalOpen(false);
     modalRef.current.close();
   };
-
+  const attachments = localStorage.getItem("attachments");
   return (
     <div className="flex flex-col gap-4 w-full border p-2 bg-white rounded">
       <div className="flex w-full justify-between items-center">
@@ -80,7 +80,7 @@ const Card = ({ data, setIsModalOpen,refetch }) => {
             <GrAttachment />
           </button>
           <p className="font-sm font-semibold">
-            {data?.attachments ? data?.attachments?.length : 0}
+            {data?.attachments ? attachments : 0}
           </p>
         </div>
         <div className="flex gap-1 items-center">
