@@ -20,7 +20,9 @@ const InCompleteTask = ({ setIsModalOpen }) => {
     } catch (error) {
       console.error("Error fetching incomplete tasks:", error.message);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
   useEffect(() => {
@@ -40,7 +42,7 @@ const InCompleteTask = ({ setIsModalOpen }) => {
           <Loader />
         ) : (
           incompleteData?.payload?.map((data, index) => (
-            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
+            <Card key={index} fetchData={fetchData} data={data} setIsModalOpen={setIsModalOpen} />
           ))
         )}
       </div>

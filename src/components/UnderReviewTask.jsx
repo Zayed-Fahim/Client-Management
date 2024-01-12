@@ -20,7 +20,9 @@ const UnderReviewTask = ({ setIsModalOpen }) => {
     } catch (error) {
       console.error("Error fetching underReview tasks:", error.message);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2500);
     }
   };
   useEffect(() => {
@@ -37,7 +39,12 @@ const UnderReviewTask = ({ setIsModalOpen }) => {
           <Loader />
         ) : (
           underReviewData?.payload?.map((data, index) => (
-            <Card key={index} data={data} setIsModalOpen={setIsModalOpen} />
+            <Card
+              key={index}
+              fetchData={fetchData}
+              data={data}
+              setIsModalOpen={setIsModalOpen}
+            />
           ))
         )}
       </div>

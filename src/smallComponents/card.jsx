@@ -6,7 +6,7 @@ import { GrAttachment } from "react-icons/gr";
 import { IoCalendarOutline } from "react-icons/io5";
 import AttachmentsModal from "../utils/AttachmentsModal";
 
-const Card = ({ data, setIsModalOpen }) => {
+const Card = ({ data, setIsModalOpen, fetchData }) => {
   const modalRef = useRef(null);
 
   const openModal = () => {
@@ -94,7 +94,12 @@ const Card = ({ data, setIsModalOpen }) => {
           </p>
         </div>
       </div>
-      <AttachmentsModal data={data} ref={modalRef} closeModal={closeModal} />
+      <AttachmentsModal
+        fetchData={fetchData}
+        data={data}
+        ref={modalRef}
+        closeModal={closeModal}
+      />
     </div>
   );
 };
